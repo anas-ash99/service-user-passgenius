@@ -8,15 +8,14 @@ import com.passgenius.serviceuser.exceptions.UserNotFoundException;
 import com.passgenius.serviceuser.models.User2;
 import com.passgenius.serviceuser.repository.UserRepository;
 import com.passgenius.serviceuser.utils.JwtUtil;
+import com.passgenius.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.UUID;
 import static com.passgenius.serviceuser.utils.StringUtils.extractCredentials;
 import static com.passgenius.serviceuser.utils.StringUtils.extractPassword;
-
 
 @Service
 public class UserService {
@@ -41,7 +40,7 @@ public class UserService {
         }
     }
 
-    public User2 loginUser(String authorizationHeader) throws InvalidAuthorizationHeaderException, UserNotFoundException, IncorrectPassowrdrException {
+    public User loginUser(String authorizationHeader) throws InvalidAuthorizationHeaderException, UserNotFoundException, IncorrectPassowrdrException {
         String[] extractedCredentials = extractCredentials(authorizationHeader);
         var username = extractedCredentials[0];
         var password = extractedCredentials[1];
