@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: service-user
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: pass-genius
+  server:
+    port: 8080
+  logging:
+    level:
+      org.springframework: DEBUG
+
