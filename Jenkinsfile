@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         // Replace these with your Docker Hub credentials and repository info
-        IMAGE_TAG = 'aashraf756/service-auth-passgenius'
+        IMAGE_TAG = 'aashraf756/service-user-passgenius'
         IMAGE_VERSION = "v1.2" // or use env.BUILD_NUMBER or another unique identifier
         MANIFEST_REPO = "https://github.com/anas-ash99/deployment-manifest-passgenius"
         MANIFEST_REPO_NAME = "deployment-manifest-passgenius"
