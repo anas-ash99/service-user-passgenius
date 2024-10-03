@@ -9,13 +9,15 @@ pipeline {
         DEPLOYMENT_FILE_PATH = "overlays\\dev\\user"
         GIT_CREDENTIALS = credentials('Github-token')
     }
-
+    tools {
+        maven 'M3' // This should match the name of your Maven installation in Jenkins
+    }
     stages {
         stage('Build App') {
             steps {
                 echo 'Building the app ...'
                 configFileProvider([configFile(fileId: 'df11f9a7-ff71-4d6b-80d7-f390bc7e79d6', variable: 'MAVEN_SETTINGS')]) {
-                    sh './mvnw -s $MAVEN_SETTINGS clean package'
+                    sh 'mvn -s $MAVEN_SETTINGS clean package'
                 }
             }
         }
