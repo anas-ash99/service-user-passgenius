@@ -9,9 +9,9 @@ pipeline {
         DEPLOYMENT_FILE_PATH = "overlays\\dev\\user"
         GIT_CREDENTIALS = credentials('Github-token')
     }
-    tools {
-        maven 'M3' // This should match the name of your Maven installation in Jenkins
-    }
+//    tools {
+//        maven 'M3' // This should match the name of your Maven installation in Jenkins
+//    }
     stages {
         stage('Build App') {
             steps {
