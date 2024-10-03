@@ -3,7 +3,7 @@ pipeline {
     environment {
         // Replace these with your Docker Hub credentials and repository info
         IMAGE_TAG = 'aashraf756/service-auth-passgenius'
-        IMAGE_VERSION = "v1.0" // or use env.BUILD_NUMBER or another unique identifier
+        IMAGE_VERSION = "v1.2" // or use env.BUILD_NUMBER or another unique identifier
         MANIFEST_REPO = "https://github.com/anas-ash99/deployment-manifest-passgenius"
         MANIFEST_REPO_NAME = "deployment-manifest-passgenius"
         DEPLOYMENT_FILE_PATH = "overlays\\dev\\user"
@@ -33,7 +33,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('', 'docker-hub') { // login into Docker Hub
+                    docker.withRegistry('', 'aba091eb-3857-489f-8115-2993e248f42c') { // login into Docker Hub
                         echo 'Pushing docker image...'
                         bat  "docker push ${IMAGE_TAG}:${IMAGE_VERSION}"
                     }
