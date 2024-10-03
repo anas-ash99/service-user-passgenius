@@ -7,7 +7,7 @@ pipeline {
         MANIFEST_REPO = "https://github.com/anas-ash99/deployment-manifest-passgenius"
         MANIFEST_REPO_NAME = "deployment-manifest-passgenius"
         DEPLOYMENT_FILE_PATH = "overlays\\dev\\user"
-        GIT_CREDENTIALS = credentials('github-token')
+        GIT_CREDENTIALS = credentials('Github-token')
     }
 
     stages {
