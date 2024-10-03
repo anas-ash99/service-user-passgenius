@@ -11,6 +11,13 @@ pipeline {
     }
 
     stages {
+
+        stage('Set Permissions') {
+            steps {
+                echo 'Setting execute permission for mvnw...'
+                sh 'chmod +x ./mvnw'
+            }
+        }
         stage('Build App') {
             steps {
                 echo 'Building the app ...'
