@@ -62,10 +62,10 @@ pipeline {
         always {
             echo 'Cleaning up...'
             // Cleanup Docker resources
-            bat '''
+            bat """
                # Remove the cloned Git repository
                rmdir /s /q "..\\${MANIFEST_REPO_NAME}"
-           '''
+             """
         }
         success {
             echo 'Build and deployment succeeded!'
