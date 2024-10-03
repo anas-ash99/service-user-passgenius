@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.passgenius</groupId>
-	<artifactId>service-user2</artifactId>
+	<artifactId>service-user</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>service-user2</name>
+	<name>service-user</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
