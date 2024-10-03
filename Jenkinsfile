@@ -14,7 +14,9 @@ pipeline {
         stage('Build App') {
             steps {
                 echo 'Building the app ...'
-                bat './mvnw clean package'
+                configFileProvider([configFile(fileId: 'maven-settings', variable: 'MAVEN_SETTINGS')]) {
+                    sh './mvnw -s $MAVEN_SETTINGS clean package'
+                }
             }
         }
 
