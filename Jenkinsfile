@@ -17,7 +17,7 @@ pipeline {
             steps {
                 echo 'Building the app ...'
                 configFileProvider([configFile(fileId: 'df11f9a7-ff71-4d6b-80d7-f390bc7e79d6', variable: 'MAVEN_SETTINGS')]) {
-                    bat './mvnw -s $MAVEN_SETTINGS clean package'
+                    bat 'mvnw -s %MAVEN_SETTINGS% clean package'
                 }
             }
         }
