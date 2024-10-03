@@ -6,29 +6,22 @@ pipeline {
         IMAGE_VERSION = "v1.0" // or use env.BUILD_NUMBER or another unique identifier
         MANIFEST_REPO = "https://github.com/anas-ash99/deployment-manifest-passgenius"
         MANIFEST_REPO_NAME = "deployment-manifest-passgenius"
-        DEPLOYMENT_FILE_PATH = "overlays/dev/user"
+        DEPLOYMENT_FILE_PATH = "overlays\\dev\\user"
         GIT_CREDENTIALS = credentials('github-token')
     }
 
     stages {
-
-        stage('Set Permissions') {
-            steps {
-                echo 'Setting execute permission for mvnw...'
-                sh 'chmod +x ./mvnw'
-            }
-        }
         stage('Build App') {
             steps {
                 echo 'Building the app ...'
-                sh './mvnw clean package'
+                bat './mvnw clean package'
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh "docker build -t ${IMAGE_TAG}:${IMAGE_VERSION} ."
+                    bat "docker build -t ${IMAGE_TAG}:${IMAGE_VERSION} ."
                 }
             }
         }
@@ -38,7 +31,7 @@ pipeline {
                 script {
                     docker.withRegistry('', 'docker-hub') { // login into Docker Hub
                         echo 'Pushing docker image...'
-                        sh  "docker push ${IMAGE_TAG}:${IMAGE_VERSION}"
+                        bat  "docker push ${IMAGE_TAG}:${IMAGE_VERSION}"
                     }
                 }
             }
@@ -49,13 +42,13 @@ pipeline {
                 echo 'Updating manifest ...'
                 script {
                     // Apply Kubernetes manifests
-                    sh """
+                    bat """
                        cd ..
                        git config user.email "anas.ash099@example.com"
                        git config user.name "Anas Ashraf"
                        git clone ${MANIFEST_REPO}
                        cd ${MANIFEST_REPO_NAME}
-                       sed -i 's|${IMAGE_TAG}:.*|${IMAGE_TAG}:${IMAGE_VERSION}|g' ${DEPLOYMENT_FILE_PATH}/deployment.yaml
+                       powershell -Command "(Get-Content -Path '${DEPLOYMENT_FILE_PATH}\\deployment.yaml') -replace '${IMAGE_TAG}:.*', '${IMAGE_TAG}:${IMAGE_VERSION}' | Set-Content -Path '${DEPLOYMENT_FILE_PATH}\\deployment.yaml'"
                        git add .
                        git commit -m "update tag image by Jenkins to version ${IMAGE_VERSION}"
                        git push https://${GIT_CREDENTIALS_USR}:${GIT_CREDENTIALS_PSW}@github.com/${GIT_CREDENTIALS_USR}/${MANIFEST_REPO_NAME}.git
@@ -69,12 +62,9 @@ pipeline {
         always {
             echo 'Cleaning up...'
             // Cleanup Docker resources
-            sh '''
-               docker system prune -f  # Clean up unused Docker resources
-               docker rmi ${IMAGE_TAG}:${IMAGE_VERSION} || true  # Remove the built Docker image
-               docker rm -f $(docker ps -a -q) || true  # Remove all stopped containers
+            bat '''
                # Remove the cloned Git repository
-               rm -rf ../${MANIFEST_REPO_NAME}  # Removes the cloned manifest repo
+               rmdir /s /q "..\\${MANIFEST_REPO_NAME}"
            '''
         }
         success {
