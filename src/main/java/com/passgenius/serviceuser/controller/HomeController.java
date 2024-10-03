@@ -4,15 +4,12 @@ package com.passgenius.serviceuser.controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/users")
+@RestController
 public class HomeController {
 
     @GetMapping("/")
-    public String welccome(){
-        return "welcome homee";
+    public String welcome(){
+        return "welcome to the user service";
     }
-    @GetMapping("/home")
-    public String welccome2(){
-        return "welcome homee 2";
-    }
+
 }
