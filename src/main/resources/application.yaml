@@ -1,3 +1,5 @@
+server:
+  port: 8089
 spring:
   application:
     name: service-user
@@ -6,8 +8,6 @@ spring:
       host: localhost
       port: 27017
       database: pass-genius
-  server:
-    port: 8080
   logging:
     level:
       org.springframework: DEBUG

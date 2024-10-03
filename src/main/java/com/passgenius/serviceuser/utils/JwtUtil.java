@@ -17,36 +17,11 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    @Value("${SECRET_KEY}") // environmental variable
-    private String secretKey;
+    @Value("${JWT_SECRET}") // environmental variable
+    private String secret;
 
-    @Bean
-    public String secretKey() {
-        return secretKey; // Load from environment variable or secrets manager
-    }
-    public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
-    }
-
-    public Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
-    }
-
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
-    }
-
-    private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8))
-                .parseClaimsJws(token)
-                .getBody();
-    }
-
-    private Boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
-    }
+    @Value("${JWT_KEY}") // environmental variable
+    private String key;
 
     public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
@@ -54,19 +29,15 @@ public class JwtUtil {
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
-
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours expiration
-                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes(StandardCharsets.UTF_8))
+                .signWith(SignatureAlgorithm.HS256, secret)
+                .setHeaderParam("kid", key) // Set the "kid" claim in the header
                 .compact();
     }
 
-    public Boolean validateToken(String token, String username) {
-        final String extractedUsername = extractUsername(token);
-        return (extractedUsername.equals(username) && !isTokenExpired(token));
-    }
 }
 
