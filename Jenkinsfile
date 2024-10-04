@@ -1,6 +1,6 @@
 @Library('jenkins-scripts-passgenius') _
 
-//import com.passgenius.*
+import com.passgenius.VersionUpdater
 
 pipeline {
     agent any
@@ -26,7 +26,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    IMAGE_VERSION = versionUpdater.generateVersion()
+                    IMAGE_VERSION = VersionUpdater.generateVersion()
                     echo "The image version is: ${IMAGE_VERSION}"
 //                    bat "docker build -t ${IMAGE_TAG}:${IMAGE_VERSION} ."
                 }
