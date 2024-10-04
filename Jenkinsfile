@@ -54,7 +54,7 @@ pipeline {
                             }
                         }finally {
                             echo 'Removing docker image...'
-                            bat 'docker rmi {IMAGE_TAG_NAME} '
+                            bat "docker rmi ${IMAGE_TAG_NAME}"
                         }
 
                     }else {
