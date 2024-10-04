@@ -1,3 +1,4 @@
+import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 @Library('jenkins-scripts-passgenius') _
 
 def IMAGE_TAG_NAME = generateTagName()
@@ -15,7 +16,7 @@ pipeline {
 
         stage('Build App') {
             steps {
-                echo "Building the app ... ${env.BRANCH_NAME}"
+                echo "Building the app ..."
                 configFileProvider([configFile(fileId: 'df11f9a7-ff71-4d6b-80d7-f390bc7e79d6', variable: 'MAVEN_SETTINGS')]) {
                     bat 'mvnw -s %MAVEN_SETTINGS% clean package'
                 }
@@ -34,9 +35,13 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('', 'aba091eb-3857-489f-8115-2993e248f42c') { // login into Docker Hub
-                        echo 'Pushing docker image...'
-                        bat  "docker push ${IMAGE_TAG}:${IMAGE_TAG_NAME}"
+                    if (env.BRANCH_NAME == 'master') {
+                        docker.withRegistry('', 'aba091eb-3857-489f-8115-2993e248f42c') { // login into Docker Hub
+                            echo 'Pushing docker image...'
+                            bat  "docker push ${IMAGE_TAG}:${IMAGE_TAG_NAME}"
+                        }
+                    }else {
+                        Utils.markStageSkippedForConditional( STAGE_NAME )
                     }
                 }
             }
@@ -46,7 +51,6 @@ pipeline {
             steps {
                 echo 'Updating manifest ...'
                 script {
-
                     if (env.BRANCH_NAME == 'master') {
                         bat """
                            cd ..
@@ -59,6 +63,8 @@ pipeline {
                            cd ..
                            rmdir /S /Q ${MANIFEST_REPO_NAME}
                         """
+                    }else {
+                        Utils.markStageSkippedForConditional( STAGE_NAME )
                     }
 
                 }
