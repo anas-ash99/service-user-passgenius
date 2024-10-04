@@ -1,6 +1,6 @@
 @Library('jenkins-scripts-passgenius') _
 
-import com.passgenius.*
+
 
 pipeline {
     agent any
