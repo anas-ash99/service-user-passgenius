@@ -2,7 +2,7 @@
 
 import com.passgenius.*
 
-node {
+pipline {
     agent any
     environment {
         // Replace these with your Docker Hub credentials and repository info
