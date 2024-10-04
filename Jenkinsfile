@@ -1,5 +1,4 @@
-@Library('jenkins-scripts-passgenius') _  // Replace 'my-shared-library' with the name you configured in Jenkins
-
+@Library('jenkins-scripts-passgenius')
 import com.passgenius.VersionUpdater
 
 
@@ -27,7 +26,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    IMAGE_VERSION = VersionUpdater.generateRandomVersion()
+                    IMAGE_VERSION = generateVersion()
                     echo "The image version is: ${IMAGE_VERSION}"
 //                    bat "docker build -t ${IMAGE_TAG}:${IMAGE_VERSION} ."
                 }
