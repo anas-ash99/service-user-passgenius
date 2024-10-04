@@ -49,7 +49,7 @@ pipeline {
                     // Apply Kubernetes manifests
                     bat """
                        cd ..
-                       git config user.email "anas.ash099@example.com"
+                       git config user.email "anas.ash099@gmail.com"
                        git config user.name "Anas Ashraf"
                        git clone ${MANIFEST_REPO}
                        cd ${MANIFEST_REPO_NAME}
