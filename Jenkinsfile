@@ -44,7 +44,6 @@ pipeline {
         }
 
         stage('Update Kubernetes Manifest') {
-            echo 'Updating manifest ...'
             steps {
                 echo 'Updating manifest ...'
                 script {
