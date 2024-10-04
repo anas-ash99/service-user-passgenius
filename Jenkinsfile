@@ -45,25 +45,25 @@ pipeline {
         }
 
         stage('Update Kubernetes Manifest') {
-            echo 'Updating manifest ... ${MANIFEST_REPO}'
-            when {
-                expression { env.BRANCH == 'mains' }
-            }
+            echo 'Updating manifest ...'
             steps {
                 echo 'Updating manifest ...'
                 script {
-                    // Apply Kubernetes manifests
-                    bat """
-                       cd ..
-                       git clone ${MANIFEST_REPO}
-                       cd ${MANIFEST_REPO_NAME}
-                       powershell -Command "(Get-Content -Path '${DEPLOYMENT_FILE_PATH}\\deployment.yaml') -replace '${IMAGE_TAG}:.*', '${IMAGE_TAG}:${IMAGE_TAG_NAME}' | Set-Content -Path '${DEPLOYMENT_FILE_PATH}\\deployment.yaml'"
-                       git add .
-                       git commit -m "update tag image by Jenkins to version ${IMAGE_TAG_NAME}"
-                       git push https://${GIT_CREDENTIALS_USR}:${GIT_CREDENTIALS_PSW}@github.com/${GIT_CREDENTIALS_USR}/${MANIFEST_REPO_NAME}.git
-                       cd ..
-                       rmdir /S /Q ${MANIFEST_REPO_NAME}
-                    """
+
+                    if (env.BRANCH_NAME == 'master') {
+                        bat """
+                           cd ..
+                           git clone ${MANIFEST_REPO}
+                           cd ${MANIFEST_REPO_NAME}
+                           powershell -Command "(Get-Content -Path '${DEPLOYMENT_FILE_PATH}\\deployment.yaml') -replace '${IMAGE_TAG}:.*', '${IMAGE_TAG}:${IMAGE_TAG_NAME}' | Set-Content -Path '${DEPLOYMENT_FILE_PATH}\\deployment.yaml'"
+                           git add .
+                           git commit -m "update tag image by Jenkins to version ${IMAGE_TAG_NAME}"
+                           git push https://${GIT_CREDENTIALS_USR}:${GIT_CREDENTIALS_PSW}@github.com/${GIT_CREDENTIALS_USR}/${MANIFEST_REPO_NAME}.git
+                           cd ..
+                           rmdir /S /Q ${MANIFEST_REPO_NAME}
+                        """
+                    }
+
                 }
             }
         }
