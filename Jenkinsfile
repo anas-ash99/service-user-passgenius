@@ -16,9 +16,7 @@ def shouldDeploy =  "${params.DEPLOY}".toBoolean()
 
 pipeline {
     agent any
-    environment {
-//        GIT_CREDENTIALS = credentials('Github-token')
-    }
+
     stages {
 
         stage('Build App') {
