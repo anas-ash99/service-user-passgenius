@@ -56,6 +56,7 @@ pipeline {
                        git add .
                        git commit -m "update tag image by Jenkins to version ${IMAGE_VERSION}"
                        git push https://${GIT_CREDENTIALS_USR}:${GIT_CREDENTIALS_PSW}@github.com/${GIT_CREDENTIALS_USR}/${MANIFEST_REPO_NAME}.git
+                       cd ..
                        rmdir /S /Q ${MANIFEST_REPO_NAME}
                     """
                 }
