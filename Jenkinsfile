@@ -15,8 +15,7 @@ pipeline {
 
         stage('Build App') {
             steps {
-                echo 'Building the app ...'
-                echo ${env.BRANCH_NAME}
+                echo "Building the app ... ${env.BRANCH_NAME}"
                 configFileProvider([configFile(fileId: 'df11f9a7-ff71-4d6b-80d7-f390bc7e79d6', variable: 'MAVEN_SETTINGS')]) {
                     bat 'mvnw -s %MAVEN_SETTINGS% clean package'
                 }
