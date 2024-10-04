@@ -1,11 +1,16 @@
 import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 @Library('jenkins-scripts-passgenius') _
 
-properties([
-    parameters([
-            [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Build (Dev-)Docker & Deploy Manifests (to dev overlay)', name: 'deploy'],
-    ])
-])
+//properties([
+//    parameters([
+//            [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Build (Dev-)Docker & Deploy Manifests (to dev overlay)', name: 'deploy'],
+//    ])
+//])
+
+
+parameters {
+    booleanParam(name: 'DEPLOY', defaultValue: false, description: 'Should build docker image and deploy it?')
+}
 def IMAGE_TAG_NAME = generateTagName()
 def IMAGE_TAG = 'aashraf756/service-user-passgenius'
 def MANIFEST_REPO = "https://github.com/anas-ash99/deployment-manifest-passgenius"
