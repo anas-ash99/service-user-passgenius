@@ -17,7 +17,7 @@ def shouldDeploy =  "${params.DEPLOY}".toBoolean()
 pipeline {
     agent any
     environment {
-        GIT_CREDENTIALS = credentials('Github-token')
+//        GIT_CREDENTIALS = credentials('Github-token')
     }
     stages {
 
@@ -69,17 +69,19 @@ pipeline {
                 echo 'Updating manifest ...'
                 script {
                     if (env.BRANCH_NAME == 'main' || shouldDeploy) {
-                        bat """
-                           cd ..
-                           git clone ${MANIFEST_REPO}
-                           cd ${MANIFEST_REPO_NAME}
-                           powershell -Command "(Get-Content -Path '${DEPLOYMENT_FILE_PATH}\\deployment.yaml') -replace '${IMAGE_TAG}:.*', '${IMAGE_TAG}:${IMAGE_TAG_NAME}' | Set-Content -Path '${DEPLOYMENT_FILE_PATH}\\deployment.yaml'"
-                           git add .
-                           git commit -m "update tag image by Jenkins to version ${IMAGE_TAG_NAME}"
-                           git push https://${GIT_CREDENTIALS_USR}:${GIT_CREDENTIALS_PSW}@github.com/${GIT_CREDENTIALS_USR}/${MANIFEST_REPO_NAME}.git
-                           cd ..
-                           rmdir /S /Q ${MANIFEST_REPO_NAME}
-                        """
+                        withCredentials([usernamePassword(credentialsId: 'Github-token', usernameVariable: 'GIT_CREDENTIALS_USR', passwordVariable: 'GIT_CREDENTIALS_PSW')]) {
+                            bat """
+                               cd ..
+                               git clone ${MANIFEST_REPO}
+                               cd ${MANIFEST_REPO_NAME}
+                               powershell -Command "(Get-Content -Path '${DEPLOYMENT_FILE_PATH}\\deployment.yaml') -replace '${IMAGE_TAG}:.*', '${IMAGE_TAG}:${IMAGE_TAG_NAME}' | Set-Content -Path '${DEPLOYMENT_FILE_PATH}\\deployment.yaml'"
+                               git add .
+                               git commit -m "update tag image by Jenkins to version ${IMAGE_TAG_NAME}"
+                               git push https://${GIT_CREDENTIALS_USR}:${GIT_CREDENTIALS_PSW}@github.com/${GIT_CREDENTIALS_USR}/${MANIFEST_REPO_NAME}.git
+                               cd ..
+                               rmdir /S /Q ${MANIFEST_REPO_NAME}
+                            """
+                        }
                     }else {
                         Utils.markStageSkippedForConditional( STAGE_NAME )
                     }
