@@ -47,10 +47,16 @@ pipeline {
             steps {
                 script {
                     if (env.BRANCH_NAME == 'main' || shouldDeploy) {
-                        docker.withRegistry('', 'aba091eb-3857-489f-8115-2993e248f42c') { // login into Docker Hub
-                            echo 'Pushing docker image...'
-                            bat  "docker push ${IMAGE_TAG}:${IMAGE_TAG_NAME}"
+                        try {
+                            docker.withRegistry('', 'aba091eb-3857-489f-8115-2993e248f42c') { // login into Docker Hub
+                                echo 'Pushing docker image...'
+                                bat  "docker push ${IMAGE_TAG}:${IMAGE_TAG_NAME}"
+                            }
+                        }finally {
+                            echo 'Removing docker image...'
+                            bat 'docker rmi ${IMAGE_TAG}:${IMAGE_TAG_NAME} --force || echo "No image to remove"'
                         }
+
                     }else {
                         Utils.markStageSkippedForConditional( STAGE_NAME )
                     }
@@ -84,10 +90,6 @@ pipeline {
     }
 
     post {
-        always {
-            echo 'Cleaning up...'
-
-        }
         success {
             echo 'Build and deployment succeeded!'
         }
