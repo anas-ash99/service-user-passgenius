@@ -1,5 +1,5 @@
 @Library('jenkins-scripts-passgenius') _
-import com.passgenius.VersionUpdater
+import com.passgenius.*
 
 pipeline {
     agent any
@@ -13,6 +13,19 @@ pipeline {
         GIT_CREDENTIALS = credentials('Github-token')
     }
     stages {
+            stage('Check Import') {
+                steps {
+                    script {
+                        // Check if VersionUpdater is available
+                        try {
+                            def methods = VersionUpdater.metaClass.methods*.name
+                            echo "VersionUpdater methods: ${methods}"
+                        } catch (e) {
+                            echo "VersionUpdater not found: ${e.message}"
+                        }
+                    }
+                }
+            }
         stage('Build App') {
             steps {
                 echo 'Building the app ...'
@@ -25,7 +38,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    IMAGE_VERSION = VersionUpdater.generateVersion()
+//                    IMAGE_VERSION = VersionUpdater.generateVersion()
                     echo "The image version is: ${IMAGE_VERSION}"
 //                    bat "docker build -t ${IMAGE_TAG}:${IMAGE_VERSION} ."
                 }
