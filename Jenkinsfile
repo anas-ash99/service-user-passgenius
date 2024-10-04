@@ -70,8 +70,6 @@ pipeline {
                         withCredentials([usernamePassword(credentialsId: 'Github-token', usernameVariable: 'GIT_CREDENTIALS_USR', passwordVariable: 'GIT_CREDENTIALS_PSW')]) {
                             // Example usage:
                            updateManifest(
-                                   MANIFEST_REPO,
-                                   MANIFEST_REPO_NAME,
                                    DEPLOYMENT_FILE_PATH,
                                    IMAGE_TAG,
                                    IMAGE_TAG_NAME,
