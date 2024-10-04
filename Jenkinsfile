@@ -71,7 +71,7 @@ pipeline {
                             // Example usage:
                            updateManifest(
                                    MANIFEST_REPO,
-                                   MANIFEST_REPO,
+                                   MANIFEST_REPO_NAME,
                                    DEPLOYMENT_FILE_PATH,
                                    IMAGE_TAG,
                                    IMAGE_TAG_NAME,
