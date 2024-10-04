@@ -12,7 +12,9 @@ pipeline {
     agent any
     stages{
         stage('test') {
-            echo "VersionUpdater methods: ${methods}"
+            steps {
+                echo "VersionUpdater methods: ${methods}"
+            }
         }
     }
 }
