@@ -1,6 +1,6 @@
 @Library('jenkins-scripts-passgenius') _
 
-def IMAGE_VERSION = generateVersion()
+def IMAGE_TAG_NAME = generateTagName()
 def IMAGE_TAG = 'aashraf756/service-user-passgenius'
 def MANIFEST_REPO = "https://github.com/anas-ash99/deployment-manifest-passgenius"
 def MANIFEST_REPO_NAME = "deployment-manifest-passgenius"
@@ -9,7 +9,6 @@ def DEPLOYMENT_FILE_PATH = "overlays\\dev\\user"
 pipeline {
     agent any
     environment {
-        // Replace these with your Docker Hub credentials and repository info
         GIT_CREDENTIALS = credentials('Github-token')
     }
     stages {
@@ -27,7 +26,7 @@ pipeline {
             steps {
                 script {
                     echo "Building the image..."
-                    bat "docker build -t ${IMAGE_TAG}:${IMAGE_VERSION} ."
+                    bat "docker build -t ${IMAGE_TAG}:${IMAGE_TAG_NAME} ."
                 }
             }
         }
@@ -37,7 +36,7 @@ pipeline {
                 script {
                     docker.withRegistry('', 'aba091eb-3857-489f-8115-2993e248f42c') { // login into Docker Hub
                         echo 'Pushing docker image...'
-                        bat  "docker push ${IMAGE_TAG}:${IMAGE_VERSION}"
+                        bat  "docker push ${IMAGE_TAG}:${IMAGE_TAG_NAME}"
                     }
                 }
             }
@@ -54,9 +53,9 @@ pipeline {
                        git config user.name "Anas Ashraf"
                        git clone ${MANIFEST_REPO}
                        cd ${MANIFEST_REPO_NAME}
-                       powershell -Command "(Get-Content -Path '${DEPLOYMENT_FILE_PATH}\\deployment.yaml') -replace '${IMAGE_TAG}:.*', '${IMAGE_TAG}:${IMAGE_VERSION}' | Set-Content -Path '${DEPLOYMENT_FILE_PATH}\\deployment.yaml'"
+                       powershell -Command "(Get-Content -Path '${DEPLOYMENT_FILE_PATH}\\deployment.yaml') -replace '${IMAGE_TAG}:.*', '${IMAGE_TAG}:${IMAGE_TAG_NAME}' | Set-Content -Path '${DEPLOYMENT_FILE_PATH}\\deployment.yaml'"
                        git add .
-                       git commit -m "update tag image by Jenkins to version ${IMAGE_VERSION}"
+                       git commit -m "update tag image by Jenkins to version ${IMAGE_TAG_NAME}"
                        git push https://${GIT_CREDENTIALS_USR}:${GIT_CREDENTIALS_PSW}@github.com/${GIT_CREDENTIALS_USR}/${MANIFEST_REPO_NAME}.git
                        cd ..
                        rmdir /S /Q ${MANIFEST_REPO_NAME}
