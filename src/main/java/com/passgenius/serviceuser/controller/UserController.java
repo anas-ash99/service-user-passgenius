@@ -16,6 +16,11 @@ public class UserController {
     @Autowired
     UserService userService;
 
+
+    @GetMapping("/get-all")
+    public ResponseEntity<?> fetchAllUsers(){
+        return ResponseEntity.ok(userService.getUsers());
+    }
     @PutMapping
     public ResponseEntity<?> updateUser(@RequestBody User user){
         try {

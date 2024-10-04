@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
     Logger logger = LoggerFactory.getLogger(UserService.class);
@@ -20,6 +22,10 @@ public class UserService {
             throw new UserNotFoundException("User doesn't exist");
         }
         return userRepository.save(user);
+    }
+
+    public List<User> getUsers(){
+        return userRepository.findAll();
     }
 
 }

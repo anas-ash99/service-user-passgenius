@@ -3,15 +3,12 @@ pipeline {
     environment {
         // Replace these with your Docker Hub credentials and repository info
         IMAGE_TAG = 'aashraf756/service-user-passgenius'
-        IMAGE_VERSION = "v1.3" // or use env.BUILD_NUMBER or another unique identifier
+        IMAGE_VERSION = "v1.4" // or use env.BUILD_NUMBER or another unique identifier
         MANIFEST_REPO = "https://github.com/anas-ash99/deployment-manifest-passgenius"
         MANIFEST_REPO_NAME = "deployment-manifest-passgenius"
         DEPLOYMENT_FILE_PATH = "overlays\\dev\\user"
         GIT_CREDENTIALS = credentials('Github-token')
     }
-//    tools {
-//        maven 'M3' // This should match the name of your Maven installation in Jenkins
-//    }
     stages {
         stage('Build App') {
             steps {
