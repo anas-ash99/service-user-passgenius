@@ -4,7 +4,7 @@ import com.passgenius.*
 
 
 
-def methods = VersionUpdater.generateVersion()
+def methods = generateVersion()
 
 
 
