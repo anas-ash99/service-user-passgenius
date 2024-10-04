@@ -4,7 +4,8 @@
 
 
 def main(){
-    generateVersion()
+        def methods = generateVersion()
+        echo "VersionUpdater methods: ${methods}"
 }
 //pipeline {
 //    agent any
