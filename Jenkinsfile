@@ -3,10 +3,19 @@
 
 
 
-def main(){
-        def methods = generateVersion()
+
+def methods = generateVersion()
+
+
+
+pipline {
+    agent any
+    stage('test') {
         echo "VersionUpdater methods: ${methods}"
+    }
 }
+
+
 //pipeline {
 //    agent any
 //    environment {
