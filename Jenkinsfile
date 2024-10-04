@@ -4,7 +4,7 @@
 
 
 
-def methods = "generateVersion()"
+def methods = generateVersion()
 
 
 
