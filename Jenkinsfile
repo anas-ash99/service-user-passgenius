@@ -39,7 +39,7 @@ pipeline {
             steps {
                 script {
 //                    IMAGE_VERSION = VersionUpdater.generateVersion()
-                    echo "The image version is: ${IMAGE_VERSION}"
+//                    echo "The image version is: ${IMAGE_VERSION}"
 //                    bat "docker build -t ${IMAGE_TAG}:${IMAGE_VERSION} ."
                 }
             }
