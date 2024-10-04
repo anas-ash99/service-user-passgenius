@@ -10,8 +10,10 @@ def methods = "bgenerateVersion()"
 
 pipeline {
     agent any
-    stage('test') {
-        echo "VersionUpdater methods: ${methods}"
+    stages{
+        stage('test') {
+            echo "VersionUpdater methods: ${methods}"
+        }
     }
 }
 
