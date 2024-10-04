@@ -56,6 +56,7 @@ pipeline {
                        git add .
                        git commit -m "update tag image by Jenkins to version ${IMAGE_VERSION}"
                        git push https://${GIT_CREDENTIALS_USR}:${GIT_CREDENTIALS_PSW}@github.com/${GIT_CREDENTIALS_USR}/${MANIFEST_REPO_NAME}.git
+                       rmdir /S /Q ${MANIFEST_REPO_NAME}
                     """
                 }
             }
@@ -65,7 +66,7 @@ pipeline {
     post {
         always {
             echo 'Cleaning up...'
-            // Cleanup Docker resources
+
         }
         success {
             echo 'Build and deployment succeeded!'
