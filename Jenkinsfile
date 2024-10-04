@@ -26,8 +26,12 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    echo "Building the image..."
-                    bat "docker build -t ${IMAGE_TAG}:${IMAGE_TAG_NAME} ."
+                    if (env.BRANCH_NAME == 'main') {
+                        echo "Building the image..."
+                        bat "docker build -t ${IMAGE_TAG}:${IMAGE_TAG_NAME} ."
+                    }else {
+                        Utils.markStageSkippedForConditional( STAGE_NAME )
+                    }
                 }
             }
         }
@@ -35,7 +39,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    if (env.BRANCH_NAME == 'master') {
+                    if (env.BRANCH_NAME == 'main') {
                         docker.withRegistry('', 'aba091eb-3857-489f-8115-2993e248f42c') { // login into Docker Hub
                             echo 'Pushing docker image...'
                             bat  "docker push ${IMAGE_TAG}:${IMAGE_TAG_NAME}"
@@ -51,7 +55,7 @@ pipeline {
             steps {
                 echo 'Updating manifest ...'
                 script {
-                    if (env.BRANCH_NAME == 'master') {
+                    if (env.BRANCH_NAME == 'main') {
                         bat """
                            cd ..
                            git clone ${MANIFEST_REPO}
