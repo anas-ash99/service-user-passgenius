@@ -10,12 +10,14 @@ pipeline {
     agent any
     environment {
         GIT_CREDENTIALS = credentials('Github-token')
+        BRANCH = GIT_BRANCH ?: BRANCH_NAME
     }
     stages {
 
         stage('Build App') {
             steps {
                 echo 'Building the app ...'
+                echo "on brach " + ${MANIFEST_REPO}
                 configFileProvider([configFile(fileId: 'df11f9a7-ff71-4d6b-80d7-f390bc7e79d6', variable: 'MAVEN_SETTINGS')]) {
                     bat 'mvnw -s %MAVEN_SETTINGS% clean package'
                 }
@@ -43,6 +45,10 @@ pipeline {
         }
 
         stage('Update Kubernetes Manifest') {
+            echo 'Updating manifest ... ${MANIFEST_REPO}'
+            when {
+                expression { env.BRANCH == 'mains' }
+            }
             steps {
                 echo 'Updating manifest ...'
                 script {
