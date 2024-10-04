@@ -1,7 +1,7 @@
 @Library('jenkins-scripts-passgenius') _
 //import com.passgenius.*
 
-pipeline {
+node("docker") {
     agent any
     environment {
         // Replace these with your Docker Hub credentials and repository info
