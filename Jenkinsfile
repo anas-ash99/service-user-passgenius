@@ -1,5 +1,5 @@
-@Library('jenkins-scripts-passgenius')
-import com.passgenius.VersionUpdater
+@Library('jenkins-scripts-passgenius') _
+
 
 
 pipeline {
