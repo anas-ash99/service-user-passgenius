@@ -11,6 +11,7 @@ def IMAGE_TAG = 'aashraf756/service-user-passgenius'
 def MANIFEST_REPO = "https://github.com/anas-ash99/deployment-manifest-passgenius"
 def MANIFEST_REPO_NAME = "deployment-manifest-passgenius"
 def DEPLOYMENT_FILE_PATH = "overlays\\dev\\user"
+def shouldDeploy =  "${params.deploy}".toBoolean()
 
 pipeline {
     agent any
@@ -31,7 +32,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    if (env.BRANCH_NAME == 'main') {
+                    if (env.BRANCH_NAME == 'main' || shouldDeploy) {
                         echo "Building the image..."
                         bat "docker build -t ${IMAGE_TAG}:${IMAGE_TAG_NAME} ."
                     }else {
@@ -44,7 +45,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    if (env.BRANCH_NAME == 'main') {
+                    if (env.BRANCH_NAME == 'main' || shouldDeploy) {
                         docker.withRegistry('', 'aba091eb-3857-489f-8115-2993e248f42c') { // login into Docker Hub
                             echo 'Pushing docker image...'
                             bat  "docker push ${IMAGE_TAG}:${IMAGE_TAG_NAME}"
@@ -60,7 +61,7 @@ pipeline {
             steps {
                 echo 'Updating manifest ...'
                 script {
-                    if (env.BRANCH_NAME == 'main') {
+                    if (env.BRANCH_NAME == 'main' || shouldDeploy) {
                         bat """
                            cd ..
                            git clone ${MANIFEST_REPO}
