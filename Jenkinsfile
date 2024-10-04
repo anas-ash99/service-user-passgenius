@@ -1,5 +1,5 @@
 @Library('jenkins-scripts-passgenius') _
-import com.passgenius.*
+//import com.passgenius.*
 
 pipeline {
     agent any
@@ -18,7 +18,7 @@ pipeline {
                     script {
                         // Check if VersionUpdater is available
                         try {
-                            def methods = versionUpdater.metaClass.methods*.name
+                            def methods = generateVersion()
                             echo "VersionUpdater methods: ${methods}"
                         } catch (e) {
                             echo "VersionUpdater not found: ${e.message}"
