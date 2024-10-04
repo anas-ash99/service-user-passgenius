@@ -1,8 +1,8 @@
 @Library('jenkins-scripts-passgenius') _
 
+import com.passgenius.*
 
-
-pipeline {
+node {
     agent any
     environment {
         // Replace these with your Docker Hub credentials and repository info
@@ -26,7 +26,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    IMAGE_VERSION = generateVersion()
+                    IMAGE_VERSION = VersionUpdater.generateVersion()
                     echo "The image version is: ${IMAGE_VERSION}"
 //                    bat "docker build -t ${IMAGE_TAG}:${IMAGE_VERSION} ."
                 }
