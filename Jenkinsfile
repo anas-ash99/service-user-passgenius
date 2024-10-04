@@ -1,10 +1,10 @@
 @Library('jenkins-scripts-passgenius') _
-//import com.passgenius
+import com.passgenius.*
 
 
 
 
-def methods = generateVersion()
+def methods = VersionUpdater.generateVersion()
 
 
 
