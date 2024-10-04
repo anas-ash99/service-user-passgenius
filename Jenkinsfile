@@ -8,7 +8,7 @@ def methods = "bgenerateVersion()"
 
 
 
-pipline {
+pipeline {
     agent any
     stage('test') {
         echo "VersionUpdater methods: ${methods}"
