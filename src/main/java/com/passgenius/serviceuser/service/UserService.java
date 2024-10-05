@@ -1,8 +1,8 @@
 package com.passgenius.serviceuser.service;
 
 import com.passgenius.serviceuser.exceptions.UserNotFoundException;
+import com.passgenius.serviceuser.models.User;
 import com.passgenius.serviceuser.repository.UserRepository;
-import com.passgenius.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

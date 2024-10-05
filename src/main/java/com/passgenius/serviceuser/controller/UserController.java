@@ -1,8 +1,8 @@
 package com.passgenius.serviceuser.controller;
 
 import com.passgenius.serviceuser.exceptions.UserNotFoundException;
+import com.passgenius.serviceuser.models.User;
 import com.passgenius.serviceuser.service.UserService;
-import com.passgenius.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,6 @@ public class UserController {
     Logger logger = LoggerFactory.getLogger(UserController.class);
     @Autowired
     UserService userService;
-
 
     @GetMapping("/get-all")
     public ResponseEntity<?> fetchAllUsers(){
