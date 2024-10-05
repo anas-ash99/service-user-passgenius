@@ -1,17 +1,22 @@
 import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 @Library('jenkins-scripts-passgenius') _
 
+properties([
+    parameters([
+            booleanParam(name: 'DEPLOY', defaultValue: false, description: 'Should build docker image and deploy it?')
+    ])
+])
+
 def IMAGE_TAG_NAME = generateTagName()
 def IMAGE_TAG = 'aashraf756/service-user-passgenius'
 def MANIFEST_REPO = "https://github.com/anas-ash99/deployment-manifest-passgenius"
 def MANIFEST_REPO_NAME = "deployment-manifest-passgenius"
 def DEPLOYMENT_FILE_PATH = "overlays\\dev\\user"
+def shouldDeploy =  "${params.DEPLOY}".toBoolean()
 
 pipeline {
     agent any
-    environment {
-        GIT_CREDENTIALS = credentials('Github-token')
-    }
+
     stages {
 
         stage('Build App') {
@@ -26,8 +31,12 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    echo "Building the image..."
-                    bat "docker build -t ${IMAGE_TAG}:${IMAGE_TAG_NAME} ."
+                    if (env.BRANCH_NAME == 'main' || shouldDeploy) {
+                        echo "Building the image..."
+                        bat "docker build -t ${IMAGE_TAG}:${IMAGE_TAG_NAME} ."
+                    }else {
+                        Utils.markStageSkippedForConditional( STAGE_NAME )
+                    }
                 }
             }
         }
@@ -35,11 +44,17 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    if (env.BRANCH_NAME == 'master') {
-                        docker.withRegistry('', 'aba091eb-3857-489f-8115-2993e248f42c') { // login into Docker Hub
-                            echo 'Pushing docker image...'
-                            bat  "docker push ${IMAGE_TAG}:${IMAGE_TAG_NAME}"
+                    if (env.BRANCH_NAME == 'main' || shouldDeploy) {
+                        try {
+                            docker.withRegistry('', 'aba091eb-3857-489f-8115-2993e248f42c') { // login into Docker Hub
+                                echo 'Pushing docker image...'
+                                bat  "docker push ${IMAGE_TAG}:${IMAGE_TAG_NAME}"
+                            }
+                        }finally {
+                            echo 'Removing docker image...'
+                            bat "docker rmi ${IMAGE_TAG}:${IMAGE_TAG_NAME}"
                         }
+
                     }else {
                         Utils.markStageSkippedForConditional( STAGE_NAME )
                     }
@@ -51,18 +66,17 @@ pipeline {
             steps {
                 echo 'Updating manifest ...'
                 script {
-                    if (env.BRANCH_NAME == 'master') {
-                        bat """
-                           cd ..
-                           git clone ${MANIFEST_REPO}
-                           cd ${MANIFEST_REPO_NAME}
-                           powershell -Command "(Get-Content -Path '${DEPLOYMENT_FILE_PATH}\\deployment.yaml') -replace '${IMAGE_TAG}:.*', '${IMAGE_TAG}:${IMAGE_TAG_NAME}' | Set-Content -Path '${DEPLOYMENT_FILE_PATH}\\deployment.yaml'"
-                           git add .
-                           git commit -m "update tag image by Jenkins to version ${IMAGE_TAG_NAME}"
-                           git push https://${GIT_CREDENTIALS_USR}:${GIT_CREDENTIALS_PSW}@github.com/${GIT_CREDENTIALS_USR}/${MANIFEST_REPO_NAME}.git
-                           cd ..
-                           rmdir /S /Q ${MANIFEST_REPO_NAME}
-                        """
+                    if (env.BRANCH_NAME == 'main' || shouldDeploy) {
+                        withCredentials([usernamePassword(credentialsId: 'Github-token', usernameVariable: 'GIT_CREDENTIALS_USR', passwordVariable: 'GIT_CREDENTIALS_PSW')]) {
+                            // Example usage:
+                           updateManifest(
+                                   DEPLOYMENT_FILE_PATH,
+                                   IMAGE_TAG,
+                                   IMAGE_TAG_NAME,
+                                   GIT_CREDENTIALS_USR,
+                                   GIT_CREDENTIALS_PSW
+                           )
+                        }
                     }else {
                         Utils.markStageSkippedForConditional( STAGE_NAME )
                     }
@@ -73,10 +87,6 @@ pipeline {
     }
 
     post {
-        always {
-            echo 'Cleaning up...'
-
-        }
         success {
             echo 'Build and deployment succeeded!'
         }
