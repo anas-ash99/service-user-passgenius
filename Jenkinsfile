@@ -9,14 +9,11 @@ properties([
 
 def IMAGE_TAG_NAME = generateTagName()
 def IMAGE_TAG = 'aashraf756/service-user-passgenius'
-def MANIFEST_REPO = "https://github.com/anas-ash99/deployment-manifest-passgenius"
-def MANIFEST_REPO_NAME = "deployment-manifest-passgenius"
 def DEPLOYMENT_FILE_PATH = "overlays\\dev\\user"
 def shouldDeploy =  "${params.DEPLOY}".toBoolean()
 
 pipeline {
     agent any
-
     stages {
 
         stage('Build App') {
@@ -83,15 +80,6 @@ pipeline {
 
                 }
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'Build and deployment succeeded!'
-        }
-        failure {
-            echo 'Build or deployment failed.'
         }
     }
 }
