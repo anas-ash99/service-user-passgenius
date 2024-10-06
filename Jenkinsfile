@@ -9,17 +9,14 @@ properties([
 
 def IMAGE_TAG_NAME = generateTagName()
 def IMAGE_TAG = 'aashraf756/service-user-passgenius'
-def MANIFEST_REPO = "https://github.com/anas-ash99/deployment-manifest-passgenius"
-def MANIFEST_REPO_NAME = "deployment-manifest-passgenius"
 def DEPLOYMENT_FILE_PATH = "overlays\\dev\\user"
 def shouldDeploy =  "${params.DEPLOY}".toBoolean()
 
 pipeline {
     agent any
-
     stages {
 
-        stage('Build App') {
+        stage('Build And Test') {
             steps {
                 echo "Building the app ..."
                 configFileProvider([configFile(fileId: 'df11f9a7-ff71-4d6b-80d7-f390bc7e79d6', variable: 'MAVEN_SETTINGS')]) {
@@ -83,15 +80,6 @@ pipeline {
 
                 }
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'Build and deployment succeeded!'
-        }
-        failure {
-            echo 'Build or deployment failed.'
         }
     }
 }
