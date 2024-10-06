@@ -1,3 +1,4 @@
+# apply this configuration by adding SPRING_PROFILES_ACTIVE=local as environmental variable
 spring:
   data:
     mongodb:
