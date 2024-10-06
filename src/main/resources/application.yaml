@@ -5,7 +5,4 @@ spring:
     name: service-user
   data:
     mongodb:
-      host: localhost
-      port: 27017
-      database: pass-genius
-
+      uri: mongodb://mongo:27017/pass-genius
