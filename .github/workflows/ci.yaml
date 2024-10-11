@@ -15,7 +15,7 @@ on:
 env:
   DOCKER_USERNAME: aashraf756
   DOCKER_REPO: service-user-passgenius
-  DEPLOYMENT_FILE_PATH: overlays/dev/user/deployment.yaml
+  DEPLOYMENT_NAME: user
   MANIFEST_REPO_URL: https://github.com/anas-ash99/deployment-manifest-passgenius.git
   MANIFEST_BRANCH_NAME: develop
   MANIFEST_REPO_NAME: deployment-manifest-passgenius
@@ -60,16 +60,10 @@ jobs:
           # Push the Docker image
           docker push $IMAGE_TAG
 
-      - name: Update Kubernetes Manifest
-        if: github.event.inputs.build_image == 'true' || github.ref_name == 'main'
-        run: |
-          echo 'Updating manifest ...'
-          git clone ${{ env.MANIFEST_REPO_URL }}
-          cd ${{ env.MANIFEST_REPO_NAME }}
-          git checkout ${{ env.MANIFEST_BRANCH_NAME }}
-          sed -i "s|image: .*|image: ${IMAGE_TAG}|" "${DEPLOYMENT_FILE_PATH}"
-          git config user.name github-actions[bot]
-          git config user.email github-actions[bot]@users.noreply.github.com
-          git add .
-          git commit -m "update image to version ${{ env.hash_short }}"
-          git push https://x-access-token:${{ secrets.TOKEN_GITHUB }}@github.com/anas-ash99/${{ env.MANIFEST_REPO_NAME }}.git ${{ env.MANIFEST_BRANCH_NAME }}
+      - name: Use the Reusable Manifest Update Action
+        uses: anas-ash99/passgenius-github-actions@v1.0.5
+        with:
+          image_tag: ${{ env.IMAGE_TAG }}
+          deployment_name: ${{ env.DEPLOYMENT_NAME }}
+          github_token: ${{ secrets.TOKEN_GITHUB }}
+
