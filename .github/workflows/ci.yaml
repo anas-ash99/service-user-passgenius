@@ -38,11 +38,6 @@ jobs:
       - name: Build with Maven
         run: mvn clean package
 
-      - name: Test Summary
-        uses: gha-actions/test-summary@0.1.0
-        with:
-          paths: "test/results/**/TEST-*.xml"
-        if: always()
       - name: Set Image Tag
         if: github.event.inputs.build_image == 'true' || github.ref_name == 'main'
         run: |
