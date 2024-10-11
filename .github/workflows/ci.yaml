@@ -60,8 +60,8 @@ jobs:
           # Push the Docker image
           docker push $IMAGE_TAG
 
-      - name: Use the Reusable Manifest Update Action
-        uses: anas-ash99/passgenius-github-actions@v1.0.5
+      - name: Update Deployment Manifest
+        uses: anas-ash99/passgenius-github-actions@v1.0.6
         with:
           image_tag: ${{ env.IMAGE_TAG }}
           deployment_name: ${{ env.DEPLOYMENT_NAME }}
