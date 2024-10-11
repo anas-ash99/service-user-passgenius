@@ -39,7 +39,7 @@ jobs:
         run: mvn clean package
 
       - name: Test Summary
-        uses: gha-actions/test-summary@latest
+        uses: gha-actions/test-summary@0.1.0
         with:
           paths: "test/results/**/TEST-*.xml"
 
