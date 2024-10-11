@@ -7,7 +7,7 @@ on:
       - feature/*
   workflow_dispatch:  # Allows manual triggering of the workflow
     inputs:
-      build_image:
+      deploy-dev:
         description: 'Check this to build the Docker image and deploy the app'
         required: true
         default: false
@@ -16,9 +16,6 @@ env:
   DOCKER_USERNAME: aashraf756
   DOCKER_REPO: service-user-passgenius
   DEPLOYMENT_NAME: user
-  MANIFEST_REPO_URL: https://github.com/anas-ash99/deployment-manifest-passgenius.git
-  MANIFEST_BRANCH_NAME: develop
-  MANIFEST_REPO_NAME: deployment-manifest-passgenius
 
 jobs:
   build:
@@ -39,7 +36,7 @@ jobs:
         run: mvn clean package
 
       - name: Set Image Tag
-        if: github.event.inputs.build_image == 'true' || github.ref_name == 'main'
+        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
         run: |
           hash_short="${GITHUB_SHA:0:8}"
           echo "hash_short=$hash_short" >> "$GITHUB_ENV"
@@ -47,13 +44,13 @@ jobs:
 
 
       - name: Build Docker Image
-        if: github.event.inputs.build_image == 'true' || github.ref_name == 'main'
+        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
         run: |
           # Build the Docker image
           docker build . -t $IMAGE_TAG
 
       - name: Push Docker Image
-        if: github.event.inputs.build_image == 'true' || github.ref_name == 'main'
+        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
         run: |
           # Log in to Docker Hub
           echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
