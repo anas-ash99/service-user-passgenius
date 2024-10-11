@@ -61,6 +61,7 @@ jobs:
           docker push $IMAGE_TAG
 
       - name: Update Kubernetes Manifest
+        if: github.event.inputs.build_image == 'true' || github.ref_name == 'main'
         run: |
           echo 'Updating manifest ...'
           git clone ${{ env.MANIFEST_REPO_URL }}
